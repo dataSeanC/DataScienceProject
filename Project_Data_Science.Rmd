@@ -1,0 +1,25 @@
+---
+title: "Project: Data Science"
+author: "Sean E. Curl"
+date: "April 4, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(readxl)
+library(readr)
+library(tidyverse)
+dataset = read_xlsx("../globalterrorismdb_0617dist.xlsx")
+
+dataset = dataset %>%
+  select("Year" = iyear, "Month" = imonth, "Day" = iday, "Country" = country_txt, "Region" = region_txt, "AttackType" = attacktype1_txt, "Target" = target1, "Killed" = nkill, "Wounded" = nwound, "Summary" = summary, "Group" = gname, "Target_Type" = targtype1_txt, "Weapon_type" = weapsubtype1_txt, "Motive" = motive) %>%
+  mutate(Casualties = Killed + Wounded)
+head(dataset)
+
+colSums(is.na(dataset))
+```
