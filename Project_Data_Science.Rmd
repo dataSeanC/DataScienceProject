@@ -21,5 +21,7 @@ dataset = dataset %>%
   mutate(Casualties = Killed + Wounded)
 head(dataset)
 
-colSums(is.na(dataset))
+library(VIM)
+dataset %>% 
+  map_dbl(~sum(is.na(.)))
 ```
