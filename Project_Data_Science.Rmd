@@ -5,28 +5,23 @@ date: "April 4, 2018"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(readxl)
 library(readr)
 library(tidyverse)
 library(styler)
 library(purrr)
-<<<<<<< HEAD
 library(ggthemes)
 library(ggmap)
-
-dataset = read_xlsx("./globalterrorismdb_0617dist.xlsx")
-=======
 library(ggplot2)
 library(ggthemes)
 library(purrr)
 ```
 
 ### Load and Clean
-```{r}
+```{r warning=FALSE}
 dataset <- read_xlsx("./globalterrorismdb_0617dist.xlsx")
->>>>>>> 815dae9cf107cca4e7e4157ee93628022279ed3a
 
 terrorism <- dataset %>%
   select("Year" = iyear, 
@@ -46,7 +41,6 @@ terrorism <- dataset %>%
   mutate(Casualties = Killed + Wounded) %>%
   glimpse()
 
-<<<<<<< HEAD
 terrorism %>% 
   map_dbl(~sum(is.na(.)))
 ```
@@ -93,35 +87,60 @@ attacking_methods
 ```
   
 ## Global Terror Maps
-```{r}
+```{r include=FALSE, cache=FALSE}
 Geo.Country = geocode(unique(terrorism$Country))
+
+```
+
+```{r warning=FALSE}
 Geo.Country$Country = unique(terrorism$Country)
 Geo.Country <- Geo.Country %>%
   select(Country, lon, lat) %>%
   arrange(Country)
 
 graph_data <- merge(Geo.Country, terrorism, by = "Country") %>%
-  mutate(">75_Casualties" = as.factor(if_else(Casualties > 75, 1, 0)),
-         "<75_Casualties" = as.factor(if_else(Casualties < 75, 1, 0))) %>%
-  group_by(Country, lon, lat, `<75_Casualties`) %>%
-  summarise()
+  group_by(Country, lon, lat, Casualties) %>%
+  summarise(total = sum(Casualties))
 
 mp <- NULL
 mapWorld <- borders("world", colour="gray50", fill="gray50")
-mp <- ggplot() + mapWorld +
- geom_point(data = graph_data, mapping = aes(x=lon, y=lat, group = Country, color = factor(`<75_Casualties`)))
+mp <- ggplot() +  mapWorld +
+  geom_point(data = graph_data, mapping = aes(x=lon, y=lat, group = Country, size = total, color = "#000099"), show.legend = FALSE) +
+  theme_classic() +
+  theme(axis.title = element_blank(),
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        axis.line = element_blank()) +
+  ggtitle("Casualties by Country since 1970")
 
-head(graph_data)
-=======
-terrorism %>%
-  map_dbl(~ sum(is.na(.)))
->>>>>>> 815dae9cf107cca4e7e4157ee93628022279ed3a
+mp
+```
+  
+```{r}
+test <- merge(Geo.Country, terrorism, by = "Country") %>%
+  group_by(Group) %>%
+  summarise(n = n()) %>%
+  arrange(desc(n)) %>%
+  slice(1:20)
 
-glimpse(terrorism)
+graph_data1 <- merge(Geo.Country, terrorism, by = "Country") %>%
+  filter(Group == test$Group) %>%
+  group_by(Country, lon, lat, Group) %>%
+  summarise(n = n()) %>%
+  arrange(desc(n))
+
+lp <- ggplot() +  mapWorld +
+  geom_point(data = graph_data1, mapping = aes(x=lon, y=lat, size = n, color = Group)) +
+  theme_classic() +
+  theme(axis.title = element_blank(),
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        axis.line = element_blank()) +
+  ggtitle("Events by the Top 20 Terrorist Organizations since 1970")
+lp
 ```
 
-<<<<<<< HEAD
-=======
+
 
 ```{r Some Basic Analysis}
 
@@ -136,7 +155,8 @@ ggplot(count,
   geom_bar(stat = "identity", show.legend = FALSE) +
   xlab("Year") +
   ylab("Count") +
-  ggtitle("Number of Terrorist Acivities Each Year")
+  ggtitle("Number of Terrorist Acivities Each Year") +
+  theme_classic()
 
 # 1.2 [11]
 count <- terrorism %>%
@@ -150,7 +170,8 @@ ggplot(count,
   xlab("Target Type") +
   ylab("Count") +
   ggtitle("Terrorist Targets by Count") +
-  theme(axis.text.x=element_text(angle = 90, hjust =1))
+  theme(axis.text.x=element_text(angle = 90, hjust =1)) +
+  theme_classic()
 
 # 1.4 [11]
 count <- terrorism %>%
@@ -164,7 +185,8 @@ ggplot(count,
   xlab("Region") +
   ylab("Count") +
   ggtitle("Terrorist Attacks by Region") +
-  theme(axis.text.x=element_text(angle = 90, hjust =1))
+  theme(axis.text.x=element_text(angle = 90, hjust =1)) +
+  theme_classic()
 
 # 1.4 [12]
 count <- terrorism %>%
@@ -178,10 +200,12 @@ ggplot(count,
   xlab("Year") +
   ylab("Count") +
   ggtitle("Terrorist Attacks by Region") +
-  theme(axis.text.x=element_text(angle = 90, hjust =1))
+  theme(axis.text.x=element_text(angle = 90, hjust =1)) +
+  theme_classic()
 
 # 1.5 [18]
 count <- terrorism %>%
+  filter(Group == test$Group & Group != "Unknown") %>%
   group_by(Group, Year) %>%
   summarise(n = n())
 
@@ -192,7 +216,8 @@ ggplot(count,
   xlab("Year") +
   ylab("Count") +
   ggtitle("Terrorist Attacks by Group") +
-  theme(axis.text.x=element_text(angle = 90, hjust =1))
+  theme(axis.text.x=element_text(angle = 90, hjust =1)) +
+  theme_classic()
 
 ```
->>>>>>> 815dae9cf107cca4e7e4157ee93628022279ed3a
+
