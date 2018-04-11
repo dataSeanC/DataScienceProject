@@ -7,28 +7,114 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-```
-
-### Exploratory Analysis
-```{r}
 library(readxl)
 library(readr)
 library(tidyverse)
 library(styler)
-dataset = read_xlsx("./globalterrorismdb_0617dist.xlsx")
+library(purrr)
+library(ggplot2)
+library(ggthemes)
+library(purrr)
+```
+
+### Load and Clean
+```{r}
+dataset <- read_xlsx("./globalterrorismdb_0617dist.xlsx")
 
 terrorism <- dataset %>%
-  select("Year" = iyear, "Month" = imonth, "Day" = iday, "Country" = country_txt, "Region" = region_txt, "AttackType" = attacktype1_txt, "Target" = target1, "Killed" = nkill, "Wounded" = nwound, "Summary" = summary, "Group" = gname, "Target_Type" = targtype1_txt, "Weapon_type" = weapsubtype1_txt, "Motive" = motive) %>%
+  select("Year" = iyear, 
+         "Month" = imonth, 
+         "Day" = iday, 
+         "Country" = country_txt, 
+         "Region" = region_txt, 
+         "AttackType" = attacktype1_txt, 
+         "Target" = target1, 
+         "Killed" = nkill, 
+         "Wounded" = nwound, 
+         "Summary" = summary, 
+         "Group" = gname, 
+         "Target_Type" = targtype1_txt, 
+         "Weapon_type" = weapsubtype1_txt, 
+         "Motive" = motive) %>%
   mutate(Casualties = Killed + Wounded) %>%
   glimpse()
 
-<<<<<<< HEAD
-library(VIM)
-dataset %>% 
-  map_dbl(~sum(is.na(.)))
+terrorism %>%
+  map_dbl(~ sum(is.na(.)))
+
+glimpse(terrorism)
 ```
-=======
-NA.Count = colSums(is.na(terrorism))
+
+
+```{r Some Basic Analysis}
+
+# 1.2 [6]
+count <- terrorism %>%
+  group_by(Year) %>%
+  summarise(n = n())
+
+ggplot(count, 
+       aes(x = Year, 
+           y = n, fill = factor(Year))) +
+  geom_bar(stat = "identity", show.legend = FALSE) +
+  xlab("Year") +
+  ylab("Count") +
+  ggtitle("Number of Terrorist Acivities Each Year")
+
+# 1.2 [11]
+count <- terrorism %>%
+  group_by(Target_Type) %>%
+  summarise(n = n())
+
+ggplot(count, 
+       aes(reorder(x = Target_Type, -n), 
+           y = n, fill = factor(Target_Type))) +
+  geom_bar(stat = "identity", show.legend = FALSE) +
+  xlab("Target Type") +
+  ylab("Count") +
+  ggtitle("Terrorist Targets by Count") +
+  theme(axis.text.x=element_text(angle = 90, hjust =1))
+
+# 1.4 [11]
+count <- terrorism %>%
+  group_by(Region) %>%
+  summarise(n = n())
+
+ggplot(count, 
+       aes(reorder(x = Region, -n), 
+           y = n, fill = factor(Region))) +
+  geom_bar(stat = "identity", show.legend = FALSE) +
+  xlab("Region") +
+  ylab("Count") +
+  ggtitle("Terrorist Attacks by Region") +
+  theme(axis.text.x=element_text(angle = 90, hjust =1))
+
+# 1.4 [12]
+count <- terrorism %>%
+  group_by(Region, Year) %>%
+  summarise(n = n())
+
+ggplot(count, 
+       aes(x = Year, 
+           y = n, colour = Region)) +
+  geom_line(stat = "identity") +
+  xlab("Year") +
+  ylab("Count") +
+  ggtitle("Terrorist Attacks by Region") +
+  theme(axis.text.x=element_text(angle = 90, hjust =1))
+
+# 1.5 [18]
+count <- terrorism %>%
+  group_by(Group, Year) %>%
+  summarise(n = n())
+
+ggplot(count, 
+       aes(x = Year, 
+           y = n, colour = Group)) +
+  geom_line(stat = "identity") +
+  xlab("Year") +
+  ylab("Count") +
+  ggtitle("Terrorist Attacks by Group") +
+  theme(axis.text.x=element_text(angle = 90, hjust =1))
 
 ```
->>>>>>> fe4f302b44eb577ca076897e2de49cd9fe847961
