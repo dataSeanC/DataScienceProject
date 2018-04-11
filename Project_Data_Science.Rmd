@@ -15,6 +15,10 @@ library(readxl)
 library(readr)
 library(tidyverse)
 library(styler)
+library(purrr)
+library(ggthemes)
+library(ggmap)
+
 dataset = read_xlsx("./globalterrorismdb_0617dist.xlsx")
 
 terrorism <- dataset %>%
@@ -22,13 +26,71 @@ terrorism <- dataset %>%
   mutate(Casualties = Killed + Wounded) %>%
   glimpse()
 
-<<<<<<< HEAD
-library(VIM)
-dataset %>% 
+terrorism %>% 
   map_dbl(~sum(is.na(.)))
 ```
-=======
-NA.Count = colSums(is.na(terrorism))
+  
+## High Impact Areas
+```{r}
+country_highest_attacks <- terrorism %>%
+  group_by(Country) %>%
+  summarise(n = n()) %>%
+  arrange(desc(n)) %>%
+  slice(1)
+
+region_highest_attacks <- terrorism %>%
+  group_by(Region) %>%
+  summarise(n = n()) %>%
+  arrange(desc(n)) %>%
+  slice(1)
+
+highest_killed <- terrorism %>%
+  group_by(Year, Country, Killed) %>%
+  summarise(max(Killed)) %>%
+  arrange(desc(Killed)) %>%
+  head(1)
+
+paste("Country with Highest Terrorist Attacks:", country_highest_attacks$Country)
+paste("Region with Highest Terrorist Attacks:", region_highest_attacks$Region)
+paste("Maximum peopled killed in an attack are:", "In", highest_killed$Year, highest_killed$`max(Killed)`, "peopled died in",highest_killed$Country)
+```
+ 
+## Popular Attack Types
+```{r}
+attacking_methods <- terrorism %>%
+  group_by(AttackType) %>%
+  summarise(n = n()) %>%
+  arrange(desc(n)) %>%
+  ggplot(mapping = aes(reorder(AttackType, -n), n, fill = AttackType)) + 
+  geom_bar(stat = "identity", show.legend = FALSE) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
+  ylab("Count") +
+  xlab("Attack Type") + 
+  ggtitle("Attacking Methods by Terrorists")
+
+attacking_methods
+```
+  
+## Global Terror Maps
+```{r}
+Geo.Country = geocode(unique(terrorism$Country))
+Geo.Country$Country = unique(terrorism$Country)
+Geo.Country <- Geo.Country %>%
+  select(Country, lon, lat) %>%
+  arrange(Country)
+
+graph_data <- merge(Geo.Country, terrorism, by = "Country") %>%
+  mutate(">75_Casualties" = as.factor(if_else(Casualties > 75, 1, 0)),
+         "<75_Casualties" = as.factor(if_else(Casualties < 75, 1, 0))) %>%
+  group_by(Country, lon, lat, `<75_Casualties`) %>%
+  summarise()
+
+mp <- NULL
+mapWorld <- borders("world", colour="gray50", fill="gray50")
+mp <- ggplot() + mapWorld +
+ geom_point(data = graph_data, mapping = aes(x=lon, y=lat, group = Country, color = factor(`<75_Casualties`)))
+
+head(graph_data)
 
 ```
->>>>>>> fe4f302b44eb577ca076897e2de49cd9fe847961
+
