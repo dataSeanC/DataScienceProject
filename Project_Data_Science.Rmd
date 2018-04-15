@@ -21,7 +21,7 @@ library(purrr)
 
 ### Load and Clean
 ```{r warning=FALSE}
-dataset <- read_xlsx("./globalterrorismdb_0617dist.xlsx")
+dataset <- read_xlsx("./globalterrorismdb_0617dist.xlsx", col_types = "text")
 
 terrorism <- dataset %>%
   select("Year" = iyear, 
@@ -38,11 +38,19 @@ terrorism <- dataset %>%
          "Target_Type" = targtype1_txt, 
          "Weapon_type" = weapsubtype1_txt, 
          "Motive" = motive,
+<<<<<<< HEAD
          "City" = city,
          "lat" = latitude,
          "lon" = longitude) %>%
+=======
+         "City" = city) %>%
+  mutate(Killed = as.numeric(Killed),
+         Wounded = as.numeric(Wounded)) %>%
+>>>>>>> 6a4bedf5bcb8bebfcfd97ab4f468bc6b7d6067ae
   mutate(Casualties = Killed + Wounded) %>%
   glimpse()
+
+
 
 terrorism %>% 
   map_dbl(~sum(is.na(.)))
@@ -78,13 +86,15 @@ paste("Maximum peopled killed in an attack are:", "In", highest_killed$Year, hig
 attacking_methods <- terrorism %>%
   group_by(AttackType) %>%
   summarise(n = n()) %>%
-  arrange(desc(n)) %>%
+  arrange(n) %>%
   ggplot(mapping = aes(reorder(AttackType, -n), n, fill = AttackType)) + 
   geom_bar(stat = "identity", show.legend = FALSE) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
   ylab("Count") +
   xlab("Attack Type") + 
-  ggtitle("Attacking Methods by Terrorists")
+  ggtitle("Attacking Methods by Terrorists") +
+  theme_classic() +
+  coord_flip()
 
 attacking_methods
 ```
