@@ -38,6 +38,7 @@ terrorism <- dataset %>%
          "Target_Type" = targtype1_txt, 
          "Weapon_type" = weapsubtype1_txt, 
          "Motive" = motive,
+<<<<<<< HEAD
          "City" = city,
          "lat" = latitude,
          "lon" = longitude) %>%
@@ -45,6 +46,17 @@ terrorism <- dataset %>%
          Wounded = as.numeric(Wounded),
          lat = as.numeric(lat),
          lon = as.numeric(lon)) %>%
+=======
+<<<<<<< HEAD
+         "City" = city,
+         "lat" = latitude,
+         "lon" = longitude) %>%
+=======
+         "City" = city) %>%
+  mutate(Killed = as.numeric(Killed),
+         Wounded = as.numeric(Wounded)) %>%
+>>>>>>> 6a4bedf5bcb8bebfcfd97ab4f468bc6b7d6067ae
+>>>>>>> f19bc5aa0c2fe237eef3d294a82c17cfd1772d28
   mutate(Casualties = Killed + Wounded) %>%
   glimpse()
 
@@ -169,7 +181,9 @@ ggplot(count,
   ylab("Count") +
   ggtitle("Number of Terrorist Acivities Each Year") +
   theme_classic()
+```
 
+```{r}
 # 1.2 [11]
 count <- terrorism %>%
   group_by(Target_Type) %>%
@@ -183,8 +197,11 @@ ggplot(count,
   ylab("Count") +
   ggtitle("Terrorist Targets by Count") +
   theme(axis.text.x=element_text(angle = 90, hjust =1)) +
-  theme_classic()
+  theme_classic() +
+  coord_flip()
+```
 
+```{r}
 # 1.4 [11]
 count <- terrorism %>%
   group_by(Region) %>%
@@ -198,8 +215,11 @@ ggplot(count,
   ylab("Count") +
   ggtitle("Terrorist Attacks by Region") +
   theme(axis.text.x=element_text(angle = 90, hjust =1)) +
-  theme_classic()
+  theme_classic() +
+  coord_flip()
+```
 
+```{r}
 # 1.4 [12]
 count <- terrorism %>%
   group_by(Region, Year) %>%
@@ -214,7 +234,9 @@ ggplot(count,
   ggtitle("Terrorist Attacks by Region") +
   theme(axis.text.x=element_text(angle = 90, hjust =1)) +
   theme_classic()
+```
 
+```{r}
 # 1.5 [18]
 count <- terrorism %>%
   filter(Group == test$Group & Group != "Unknown") %>%
@@ -230,6 +252,40 @@ ggplot(count,
   ggtitle("Terrorist Attacks by Group") +
   theme(axis.text.x=element_text(angle = 90, hjust =1)) +
   theme_classic()
+```
 
+```{r Terroist Attacks in USA}
+count <- terrorism %>%
+  filter(Country == "United States")  %>%
+  group_by(Year) %>%
+  summarise(n = n())
+
+ggplot(count, 
+       aes(x = Year, 
+           y = n)) +
+  geom_line(stat = "identity") +
+  xlab("Year") +
+  ylab("Count") +
+  ggtitle("Terrorist Attacks in the United States") +
+  theme(axis.text.x=element_text(angle = 90, hjust =1)) +
+  theme_classic()
+
+highest_killed_USA <- terrorism %>%
+  filter(Country == "United States")  %>%
+  group_by(Year, City, Casualties) %>%
+  summarise(max(Casualties)) %>%
+  arrange(desc(Casualties)) %>%
+  head(10)
+
+data.frame(highest_killed_USA)
+
+terrorism %>%
+  filter(Country == "United States")  %>%
+  mutate(bKilled = as.factor(ifelse(Killed > 1, 1, 0))) %>%
+  na.omit() %>%
+  ggplot(aes(Year, fill = Weapon_type)) +
+  geom_density(alpha = 0.5) +
+  scale_x_log10() +
+  facet_wrap(~ bKilled, ncol = 1)
 ```
 
