@@ -38,9 +38,13 @@ terrorism <- dataset %>%
          "Target_Type" = targtype1_txt, 
          "Weapon_type" = weapsubtype1_txt, 
          "Motive" = motive,
-         "City" = city) %>%
+         "City" = city,
+         "lat" = latitude,
+         "lon" = longitude) %>%
   mutate(Killed = as.numeric(Killed),
-         Wounded = as.numeric(Wounded)) %>%
+         Wounded = as.numeric(Wounded),
+         lat = as.numeric(lat),
+         lon = as.numeric(lon)) %>%
   mutate(Casualties = Killed + Wounded) %>%
   glimpse()
 
@@ -105,14 +109,15 @@ Geo.Country <- Geo.Country %>%
   select(Country, lon, lat) %>%
   arrange(Country)
 
-graph_data <- merge(Geo.Country, terrorism, by = "Country") %>%
-  group_by(Country, lon, lat, Casualties) %>%
+graph_data <- terrorism %>%
+  filter(Year == "1980") %>%
+  group_by(Year, Country, lon, lat, Casualties) %>%
   summarise(total = sum(Casualties))
 
 mp <- NULL
 mapWorld <- borders("world", colour="gray50", fill="gray50")
 mp <- ggplot() +  mapWorld +
-  geom_point(data = graph_data, mapping = aes(x=lon, y=lat, group = Country, size = total, color = "#000099"), show.legend = FALSE) +
+  geom_point(data = graph_data, mapping = aes(x=lon, y=lat, size = total, color = "#000099"), show.legend = FALSE) +
   theme_classic() +
   theme(axis.title = element_blank(),
         axis.text = element_blank(),
