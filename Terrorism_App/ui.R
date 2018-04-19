@@ -10,8 +10,9 @@ library(ggplot2)
 library(ggthemes)
 library(purrr)
 library(shinythemes)
+library(rworldmap)
 
-mycss <- "
+slider_bar_css <- "
 .irs-bar,
 .irs-bar-edge,
 .irs-single,
@@ -20,7 +21,32 @@ mycss <- "
   border-color: red;
 }"
 
-shinyUI(fluidPage(theme = shinytheme("superhero"),
+terrorism <- read_xlsx("C:/Data/globalterrorismdb_0617dist.xlsx", col_types = "text") %>%
+  select("Year" = iyear, 
+         "Month" = imonth, 
+         "Day" = iday, 
+         "Country" = country_txt, 
+         "Region" = region_txt, 
+         "AttackType" = attacktype1_txt, 
+         "Target" = target1, 
+         "Killed" = nkill, 
+         "Wounded" = nwound, 
+         "Summary" = summary, 
+         "Group" = gname, 
+         "Target_Type" = targtype1_txt, 
+         "Weapon_type" = weapsubtype1_txt, 
+         "Motive" = motive,
+         "City" = city,
+         "lat" = latitude,
+         "long" = longitude) %>%
+  mutate(Killed = as.numeric(Killed),
+         Wounded = as.numeric(Wounded),
+         lat = as.numeric(lat),
+         long = as.numeric(long),
+         Casualties = Killed + Wounded)
+
+
+shinyUI(fluidPage(theme = shinytheme("united"),
   
   navbarPage("Global Terrorism Database",
              tabPanel("About",
@@ -46,13 +72,22 @@ shinyUI(fluidPage(theme = shinytheme("superhero"),
                       mainPanel(
                         h4("Global Terror Attacks Time Series"),
                         plotOutput(outputId = "GTA", width = "150%", height = 525),
-                        tags$style(mycss),
+                        tags$style(slider_bar_css),
                         uiOutput("testSlider"),
                         h4("Global Terror Attacks: Fast Facts"),
                         verbatimTextOutput(outputId = "GTAFF")
                       )),
-             tabPanel("Terrorism by Region"),
-             tabPanel("Most Notorious Groups"),
+             tabPanel("Terrorism by Region",
+                        mainPanel(
+                          h4("Time-Series Analysis"),
+                          uiOutput("TBR"),
+                          plotOutput("line", width = "150%", height = 525),
+                          hr(),
+                          h4("Heat Map"),
+                          plotOutput("heat", width = "150%", height = 525)
+                        )
+                      ),
+             tabPanel("Notorious Groups"),
              tabPanel("Terror Activities in USA"),
              tabPanel("World Terrorism Spread")
             )
