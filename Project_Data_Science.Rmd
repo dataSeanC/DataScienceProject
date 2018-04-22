@@ -47,11 +47,31 @@ terrorism <- dataset %>%
          "Motive" = motive,
          "City" = city,
          "lat" = latitude,
+<<<<<<< HEAD
          "long" = longitude,
+=======
+         "lon" = longitude) %>%
+  mutate(Killed = as.numeric(Killed),
+         Wounded = as.numeric(Wounded),
+         lat = as.numeric(lat),
+         lon = as.numeric(lon)) %>%
+=======
+<<<<<<< HEAD
+         "City" = city,
+         "lat" = latitude,
+         "lon" = longitude) %>%
+=======
+>>>>>>> d758fab117c0c8b10a431ec6be65c639204ecdc0
          "City" = city) %>%
   
   mutate(Killed = as.numeric(Killed),
+<<<<<<< HEAD
          Wounded = as.numeric(Wounded), lat = as.numeric(lat), long = as.numeric(long)) %>%
+=======
+         Wounded = as.numeric(Wounded)) %>%
+>>>>>>> 6a4bedf5bcb8bebfcfd97ab4f468bc6b7d6067ae
+>>>>>>> f19bc5aa0c2fe237eef3d294a82c17cfd1772d28
+>>>>>>> d758fab117c0c8b10a431ec6be65c639204ecdc0
   mutate(Casualties = Killed + Wounded) %>%
   glimpse()
 
@@ -100,6 +120,48 @@ attacking_methods <- terrorism %>%
   coord_flip()
 
 attacking_methods
+<<<<<<< HEAD
+=======
+```
+  
+## Global Terror Maps
+```{r include=FALSE, cache=FALSE}
+Geo.Country = geocode(unique(terrorism$Country))
+
+```
+
+```{r warning=FALSE}
+Geo.Country$Country = unique(terrorism$Country)
+Geo.Country <- Geo.Country %>%
+  select(Country, lon, lat) %>%
+  arrange(Country)
+
+graph_data <- terrorism %>%
+  filter(Year == "1980") %>%
+  group_by(Year, Country, lon, lat, Casualties) %>%
+  summarise(total = sum(Casualties))
+
+mp <- NULL
+mapWorld <- borders("world", colour="gray50", fill="gray50")
+mp <- ggplot() +  mapWorld +
+  geom_point(data = graph_data, mapping = aes(x=lon, y=lat, size = total, color = "#000099"), show.legend = FALSE) +
+  theme_classic() +
+  theme(axis.title = element_blank(),
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        axis.line = element_blank()) +
+  ggtitle("Casualties by Country since 1970")
+
+mp
+```
+  
+```{r}
+test <- merge(Geo.Country, terrorism, by = "Country") %>%
+  group_by(Group) %>%
+  summarise(n = n()) %>%
+  arrange(desc(n)) %>%
+  slice(1:20)
+>>>>>>> d758fab117c0c8b10a431ec6be65c639204ecdc0
 
 attacking_methods_table <- terrorism %>%
   group_by(AttackType) %>%
