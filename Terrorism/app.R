@@ -329,7 +329,7 @@ server <- function(input, output) {
   
   
   output$Group <- renderUI({
-    checkboxGroupInput("Group", "Choose a Terrorist Group:", choices = c("Taliban", "Shining Path (SL)",
+    selectInput("Group", "Choose a Terrorist Group:", choices = c("Taliban", "Shining Path (SL)",
                                                                          "Islamic State of Iraq and the Levant (ISIL)", 
                                                                          "Farabundo Marti National Liberation Front (FMLN)", 
                                                                          "Al-Shabaab",
@@ -341,7 +341,7 @@ server <- function(input, output) {
   })
   
   output$Decade <- renderUI({
-    checkboxGroupInput("Decade", "Choose a Decade:", choices = c("1970", "1980", "1990", "2000", "2010"))
+    selectInput("Decade", "Choose a Decade:", choices = c("1970", "1980", "1990", "2000", "2010"))
   })
   
   Group_graph_data <- reactive({
