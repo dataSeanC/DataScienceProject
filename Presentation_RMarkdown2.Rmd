@@ -30,6 +30,7 @@ library(purrr)
 library(ggrepel)
 library(revealjs)
 ```
+
 # Global Terrorism Database (GTD) using GGplot and Shiny   {data-background="http://static3.uk.businessinsider.com/image/555bc021dd08951f418b457f/world-1.gif"}
   > Authors: "Sean E. Curl & Steven Aguilar"
   > Date: "April 25, 2018"
@@ -546,7 +547,7 @@ output <- distinct(highest_killed_USA, Year, .keep_all = TRUE)
 head(output)
 ```
 
-## {data-background-iframe="https://saguilar.shinyapps.io/GTDB/"}
+# {data-background-iframe="https://saguilar.shinyapps.io/GTDB/"}
 
 
 ## Presentation created using REVEAL.JS
