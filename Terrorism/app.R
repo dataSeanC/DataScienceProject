@@ -14,6 +14,7 @@ library(rworldmap)
 library(ggrepel)
 library(leaflet)
 library(rsconnect)
+library(RColorBrewer)
 
 slider_bar_css <- "
 .irs-bar,
@@ -82,7 +83,7 @@ ui <- fluidPage(theme = shinytheme("united"),
                                       )),
                              tabPanel("Interactive Map",
                                       icon = icon("map"),
-                                      leafletOutput("Interactive", width = "150%", height = 1000)
+                                      leafletOutput("Interactive", width = "100%", height = 544)
                              )
                   )
                   )
@@ -102,7 +103,8 @@ server <- function(input, output) {
     mutate(Killed = as.numeric(Killed),
            Wounded = as.numeric(Wounded),
            lat = as.numeric(lat),
-           long = as.numeric(long)) %>%
+           long = as.numeric(long),
+           Year = as.numeric(Year)) %>%
     mutate(Casualties = Killed + Wounded)
   
   output$Data <- renderPrint({
@@ -396,13 +398,29 @@ server <- function(input, output) {
     
   })
   
+  pal <- rev(brewer.pal(9, "Reds"))
+  
+  int <- terrorism %>%
+    filter(Casualties > 0 & Year > 2010) %>%
+    na.omit(Casualties) %>%
+    mutate(Casualties = log1p(Casualties))
+  
+  pal <- colorNumeric(
+    palette = pal,
+    domain = int$Casualties
+  )
+  
   output$Interactive <- renderLeaflet({
-    leaflet(subset(terrorism, Killed > 0)) %>% 
-      addTiles() %>%
-      addMiniMap() %>%
+    leaflet(int) %>% 
+      addProviderTiles(providers$Esri.WorldStreetMap) %>%
+      addMiniMap(tiles = providers$Esri.WorldStreetMap,
+                 toggleDisplay = TRUE) %>%
       setView(lng = -73.935242, lat = 40.730610, zoom = 4)  %>%
       addCircles(~long, ~lat, weight = 1,
-                 radius = ~Killed*100, popup = ~Group, label = ~Killed)
+                 radius = ~Casualties*25000, label = ~Group,
+                 color = ~pal(Casualties)) %>%
+      addLegend("bottomleft", pal = pal, values = ~Casualties,
+                opacity = 1)
     
     
   })
