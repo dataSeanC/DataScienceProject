@@ -337,11 +337,13 @@ server <- function(input, output) {
                                                                          "Revolutionary Armed Forces of Colombia (FARC)",
                                                                          "New People's Army (NPA)",
                                                                          "Kurdistan Workers' Party (PKK)",
-                                                                         "Boko Haram") )
+                                                                         "Boko Haram"),
+                multiple = TRUE)
   })
   
   output$Decade <- renderUI({
-    selectInput("Decade", "Choose a Decade:", choices = c("1970", "1980", "1990", "2000", "2010"))
+    selectInput("Decade", "Choose a Decade:", choices = c("1970", "1980", "1990", "2000", "2010"),
+                multiple = TRUE)
   })
   
   Group_graph_data <- reactive({
