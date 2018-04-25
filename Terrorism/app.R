@@ -71,8 +71,6 @@ ui <- fluidPage(theme = shinytheme("united"),
                              tabPanel("Notorious Groups",
                                       icon = icon("group"),
                                       h4("Most Active Terrorist Groups"),
-                                      plotOutput("NG", width = "100%", height = 500),
-                                      hr(),
                                       fluidRow(
                                         column(3,
                                                uiOutput("Group")
@@ -80,7 +78,9 @@ ui <- fluidPage(theme = shinytheme("united"),
                                         column(4, offset = 1,
                                                uiOutput("Decade")
                                         )
-                                      )),
+                                      ),
+                                      hr(),
+                                      plotOutput("NG", width = "100%", height = 500)),
                              tabPanel("Interactive Map",
                                       icon = icon("map"),
                                       leafletOutput("Interactive", width = "100%", height = 544)
@@ -370,11 +370,6 @@ server <- function(input, output) {
   
   
   output$NG <- renderPlot({
-    validate(                      
-      need(input$Group != "", "Please select a Group"),
-      need(input$Decade != "", "Please select a Decade")
-    )
-    req(input$Group, input$Decade)
     lp <- NULL
     mapWorld <- borders("world", colour="gray50", fill="gray50")
     
