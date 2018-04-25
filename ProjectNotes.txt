@@ -1,0 +1,11 @@
+Notes:
+Global Terrorism Database (GTD) is an open-source database with information about terrorist attacks worldwide from 1970 to 2016. The database is maintained by researchers at the National Consortium for the Study of Terrorism and Responses to Terrorism (START), headquartered at the University of Maryland.
+
+Notes
+The Global Terrorism Database is funded through START, by the US Department of State and the US Department of Homeland Security Science and Technology Directorate's Office of University Programs. The coding decisions and classifications contained in the database are determined independently by START researchers and should not be interpreted as necessarily representing the official views or policies of the United States Government.
+
+Notes:
+In the interested of time and sanity, we selected from the >100 variables, the best variables we thought would lead to a 'quick n' easy' interpretable user experience. As a result, we also created a variable of our own called 'causalities.' The variable is the summation of the Killed and Wounded variables. This variable allowed us a quick and easy way measure the impact a particular terrorist event(s) by using only a single variable.
+
+Notes:
+As you can see, the terrorism database has a bunch of missing observations amongst Target, Killed, Wounded, Summary, Weapon_type, Motive, City, lat, long, and Casualties. Many of these variables are missing simply because the researchers lacked the fidelity for an exact location, weapon, motive, etc. In the case of Killed and Wounded, missing values represent that fact that no person was either killed or wounded in that particular attack. For example, an attack could be deemed a success if the intended target was destroyed (e.g. infrastructure), but there might not have been any casualties as a result of the attack.
