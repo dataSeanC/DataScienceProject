@@ -1,0 +1,12 @@
+name: terror
+title: terror
+username:
+account: saguilar
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 329579
+bundleId: 1337258
+url: https://saguilar.shinyapps.io/terror/
+when: 1524614322.893
+asMultiple: FALSE
+asStatic: FALSE

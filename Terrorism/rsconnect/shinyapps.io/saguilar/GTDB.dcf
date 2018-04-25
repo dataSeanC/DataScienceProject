@@ -1,0 +1,12 @@
+name: GTDB
+title: GTDB
+username:
+account: saguilar
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 329594
+bundleId: 1337467
+url: https://saguilar.shinyapps.io/GTDB/
+when: 1524623727.10999
+asMultiple: FALSE
+asStatic: FALSE

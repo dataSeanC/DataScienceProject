@@ -1,0 +1,12 @@
+name: TERRORISM
+title: TERRORISM
+username:
+account: saguilar
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 329583
+bundleId: 1337250
+url: https://saguilar.shinyapps.io/TERRORISM/
+when: 1524613611.84812
+asMultiple: FALSE
+asStatic: FALSE
