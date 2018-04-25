@@ -30,7 +30,6 @@ library(purrr)
 library(ggrepel)
 library(revealjs)
 ```
-
 # Global Terrorism Database (GTD) using GGplot and Shiny   {data-background="http://static3.uk.businessinsider.com/image/555bc021dd08951f418b457f/world-1.gif"}
   > Authors: "Sean E. Curl & Steven Aguilar"
   > Date: "April 25, 2018"
@@ -66,7 +65,7 @@ https://www.kaggle.com/START-UMD/gtd
 See the http://start.umd.edu/gtd/downloads/Codebook.pdf for important details on data collection methodology, definitions, and coding schema.
 
 
-# Load and Clean
+# Load and Clean {data-background="https://media.giphy.com/media/aQCCNezRpb9Hq/giphy.gif"}
 ##
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 terrorism <- read_xlsx(path = "C:/Users/Chrono/Desktop/Data Science/ProjectDataScience/globalterrorismdb_0617dist.xlsx", col_types = "text") %>%
@@ -99,7 +98,7 @@ terrorism %>%
 ```
 
 
-# High Impact Areas
+# High Impact Areas {data-background="https://media.giphy.com/media/5fGQIQ8BBhnXO/giphy.gif"}
 ##
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
@@ -178,7 +177,7 @@ paste("Group with Highest Terrorist Attacks (not unk.):", Group_highest$Group)
 ```
  
 
-# Popular Attack Types
+# Popular Attack Types {data-background="https://media.giphy.com/media/kHuMS1H30iqyc/giphy.gif"}
 ##
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 attacking_methods <- terrorism %>%
@@ -241,7 +240,7 @@ union2
 ```
 
 
-# Number of Terrorist Acivities by Year
+# Number of Terrorist Acivities by Year {data-background="https://media.giphy.com/media/Cx28HgbGAwFri/giphy.gif"}
 ##
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 # Number of Terrorist Acivities Year
@@ -311,7 +310,7 @@ head(output, 5)
 ```
 
 
-# Terrorist Targets by Count
+# Terrorist Targets by Count {data-background="https://media.giphy.com/media/NTkXyye1ejDIk/giphy.gif"}
 ##
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 count <- terrorism %>%
@@ -362,7 +361,7 @@ output <- distinct(Target_Country, Target_Type, .keep_all = TRUE)
 head(output, 5)
 ```
 
-# Terrorist Attacks by City in USA
+# Terrorist Attacks by City in USA {data-background="https://media.giphy.com/media/xUNd9FaInWieZLffig/giphy.gif"}
 
 ##
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
@@ -547,15 +546,15 @@ output <- distinct(highest_killed_USA, Year, .keep_all = TRUE)
 head(output)
 ```
 
-# {data-background-iframe="https://saguilar.shinyapps.io/GTDB/"}
+## {data-background-iframe="https://saguilar.shinyapps.io/GTDB/"}
 
 
 ## Presentation created using REVEAL.JS
 > - https://revealjs.com/#/
 > - https://rmarkdown.rstudio.com/revealjs_presentation_format.html
-
+> - http://rpubs.com/securl/revealjspresent2
 
 ## Github Repo:
 > - https://github.com/dataSeanC
 
-## QUESTIONS?
+## QUESTIONS? {data-background="https://media.giphy.com/media/xUNd9FaInWieZLffig/giphy.gif"}
