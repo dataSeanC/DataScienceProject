@@ -68,7 +68,7 @@ See the http://start.umd.edu/gtd/downloads/Codebook.pdf for important details on
 # Load and Clean {data-background="https://media.giphy.com/media/aQCCNezRpb9Hq/giphy.gif"}
 ##
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-terrorism <- read_xlsx(path = "C:/Users/Chrono/Desktop/Data Science/ProjectDataScience/globalterrorismdb_0617dist.xlsx", col_types = "text") %>%
+terrorism <- read_xlsx(path = "./globalterrorismdb_0617dist.xlsx", col_types = "text") %>%
   select("Year" = iyear, 
          "Month" = imonth, 
          "Day" = iday, 
